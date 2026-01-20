@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, ArrowRight, Sparkles, Plus, Trash2, ShoppingBag, Zap, Upload, X } from 'lucide-react';
@@ -68,10 +68,16 @@ export default function BuilderPage() {
     setSubdomain(brandName.toLowerCase().replace(/[^a-z0-9]/g, '-'));
   };
 
-  const handleNext = () => {
-    if (currentStep === 2) {
+  // Auto-generate store content when moving to step 3
+  useEffect(() => {
+    if (currentStep === 3 && !generatedStore) {
       handleGenerate();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep]);
+
+
+  const handleNext = () => {
     if (currentStep < 4) {
       setCurrentStep((currentStep + 1) as Step);
     }
@@ -84,6 +90,11 @@ export default function BuilderPage() {
   };
 
   const handlePublish = () => {
+    if (!generatedStore) {
+      alert('Please complete all previous steps first!');
+      return;
+    }
+
     const storeData = {
       ...generatedStore,
       subdomain,
@@ -91,8 +102,16 @@ export default function BuilderPage() {
       published: false
     };
     
-    localStorage.setItem('tempStore', JSON.stringify(storeData));
-    router.push(`/preview?store=${subdomain}`);
+    console.log('Saving store data:', storeData);
+    
+    try {
+      localStorage.setItem('tempStore', JSON.stringify(storeData));
+      console.log('Store data saved successfully');
+      router.push(`/preview?store=${subdomain}`);
+    } catch (error) {
+      console.error('Error saving store:', error);
+      alert('Failed to save store data. Please try again.');
+    }
   };
 
   const canProceed = () => {
