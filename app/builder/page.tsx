@@ -480,37 +480,150 @@ Check browser console for details.`);
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-6">
-                {[
-                  { id: 'modern-minimal', name: 'Modern Minimal', desc: 'Clean & Professional', color: 'blue' },
-                  { id: 'bold-vibrant', name: 'Bold & Vibrant', desc: 'Eye-catching', color: 'pink' },
-                  { id: 'classic-elegant', name: 'Classic Elegant', desc: 'Timeless Luxury', color: 'purple' },
-                  { id: 'tech-modern', name: 'Tech Modern', desc: 'Sleek & Modern', color: 'cyan' },
-                  { id: 'boutique-chic', name: 'Boutique Chic', desc: 'Stylish & Trendy', color: 'rose' },
-                  { id: 'minimal-zen', name: 'Minimal Zen', desc: 'Ultra Minimal', color: 'green' }
-                ].map((theme) => (
-                  <div
-                    key={theme.id}
-                    onClick={() => setSelectedTheme(theme.id)}
-                    className={`p-6 border-2 rounded-xl cursor-pointer transition-all ${
-                      selectedTheme === theme.id
-                        ? 'border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/30'
-                        : 'border-blue-500/20 glass-dark hover:border-blue-500/50'
-                    }`}
-                  >
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-bold text-lg text-white">{theme.name}</h3>
-                      {selectedTheme === theme.id && (
-                        <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center glow">
-                          <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
+              <div className="space-y-8">
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="text-blue-400">✨</span> Modern Themes
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {[
+                      { id: 'modern-minimal', name: 'Modern Minimal', desc: 'Clean & Professional' },
+                      { id: 'tech-modern', name: 'Tech Modern', desc: 'Sleek & Modern' },
+                      { id: 'boutique-chic', name: 'Boutique Chic', desc: 'Stylish & Trendy' },
+                      { id: 'gradient-modern', name: 'Gradient Modern', desc: 'Vibrant & Contemporary' },
+                      { id: 'corporate-pro', name: 'Corporate Pro', desc: 'Professional & Trustworthy' }
+                    ].map((theme) => (
+                      <div
+                        key={theme.id}
+                        onClick={() => setSelectedTheme(theme.id)}
+                        className={`p-6 border-2 rounded-xl cursor-pointer transition-all ${
+                          selectedTheme === theme.id
+                            ? 'border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/30'
+                            : 'border-blue-500/20 glass-dark hover:border-blue-500/50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="font-bold text-lg text-white">{theme.name}</h3>
+                          {selectedTheme === theme.id && (
+                            <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center glow">
+                              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-400">{theme.desc}</p>
+                        <p className="text-sm text-gray-400">{theme.desc}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="text-purple-400">🎨</span> Minimal Themes
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {[
+                      { id: 'minimal-zen', name: 'Minimal Zen', desc: 'Ultra Minimal' },
+                      { id: 'soft-pastel', name: 'Soft Pastel', desc: 'Gentle & Light' },
+                      { id: 'minimalist-mono', name: 'Minimalist Monochrome', desc: 'Black & White' }
+                    ].map((theme) => (
+                      <div
+                        key={theme.id}
+                        onClick={() => setSelectedTheme(theme.id)}
+                        className={`p-6 border-2 rounded-xl cursor-pointer transition-all ${
+                          selectedTheme === theme.id
+                            ? 'border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/30'
+                            : 'border-blue-500/20 glass-dark hover:border-blue-500/50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="font-bold text-lg text-white">{theme.name}</h3>
+                          {selectedTheme === theme.id && (
+                            <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center glow">
+                              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-400">{theme.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="text-pink-400">⚡</span> Bold Themes
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {[
+                      { id: 'bold-vibrant', name: 'Bold & Vibrant', desc: 'Eye-catching' },
+                      { id: 'urban-edge', name: 'Urban Edge', desc: 'Edgy & Urban' },
+                      { id: 'neon-cyber', name: 'Neon Cyber', desc: 'Futuristic & Gaming' },
+                      { id: 'artistic-creative', name: 'Artistic Creative', desc: 'Unique & Artistic' }
+                    ].map((theme) => (
+                      <div
+                        key={theme.id}
+                        onClick={() => setSelectedTheme(theme.id)}
+                        className={`p-6 border-2 rounded-xl cursor-pointer transition-all ${
+                          selectedTheme === theme.id
+                            ? 'border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/30'
+                            : 'border-blue-500/20 glass-dark hover:border-blue-500/50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="font-bold text-lg text-white">{theme.name}</h3>
+                          {selectedTheme === theme.id && (
+                            <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center glow">
+                              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-400">{theme.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="text-yellow-400">👑</span> Classic Themes
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-6">
+                    {[
+                      { id: 'classic-elegant', name: 'Classic Elegant', desc: 'Timeless Luxury' },
+                      { id: 'luxury-premium', name: 'Luxury Premium', desc: 'High-end & Exclusive' },
+                      { id: 'vintage-retro', name: 'Vintage Retro', desc: 'Nostalgic & Classic' },
+                      { id: 'organic-natural', name: 'Organic Natural', desc: 'Eco-friendly & Natural' }
+                    ].map((theme) => (
+                      <div
+                        key={theme.id}
+                        onClick={() => setSelectedTheme(theme.id)}
+                        className={`p-6 border-2 rounded-xl cursor-pointer transition-all ${
+                          selectedTheme === theme.id
+                            ? 'border-blue-500 bg-blue-500/10 shadow-lg shadow-blue-500/30'
+                            : 'border-blue-500/20 glass-dark hover:border-blue-500/50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <h3 className="font-bold text-lg text-white">{theme.name}</h3>
+                          {selectedTheme === theme.id && (
+                            <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center glow">
+                              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-400">{theme.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           )}

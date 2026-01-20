@@ -441,6 +441,14 @@ function PreviewContent() {
     'minimal-zen': renderModernMinimal,
     'urban-edge': renderBoldVibrant,
     'organic-natural': renderClassicElegant,
+    'luxury-premium': renderClassicElegant,
+    'neon-cyber': renderBoldVibrant,
+    'soft-pastel': renderModernMinimal,
+    'vintage-retro': renderClassicElegant,
+    'corporate-pro': renderModernMinimal,
+    'artistic-creative': renderBoldVibrant,
+    'minimalist-mono': renderModernMinimal,
+    'gradient-modern': renderModernMinimal,
   };
 
   const renderTheme = themeRenderers[store.themeId] || renderModernMinimal;
