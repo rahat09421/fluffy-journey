@@ -2,7 +2,8 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, Heart, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, Heart, ArrowLeft, Star } from 'lucide-react';
+import Image from 'next/image';
 
 interface StoreData {
   brandName: string;
@@ -23,6 +24,7 @@ interface StoreData {
     description: string;
     price: number;
     category: string;
+    image?: string;
   }>;
   published?: boolean;
 }
@@ -42,20 +44,19 @@ function PreviewContent() {
 
   if (!store) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your store...</p>
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-300 text-lg">Loading your store...</p>
         </div>
       </div>
     );
   }
 
   const renderModernMinimal = () => (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
       <nav 
-        className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur-sm"
-        style={{ borderColor: store.colorScheme.secondary }}
+        className="sticky top-0 z-50 backdrop-blur-xl border-b border-gray-200 bg-white/80"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
@@ -67,18 +68,18 @@ function PreviewContent() {
                 {store.brandName}
               </div>
               <div className="hidden md:flex gap-6">
-                <a href="#products" className="text-gray-600 hover:text-gray-900">Products</a>
-                <a href="#about" className="text-gray-600 hover:text-gray-900">About</a>
-                <a href="#contact" className="text-gray-600 hover:text-gray-900">Contact</a>
+                <a href="#products" className="text-gray-700 hover:text-gray-900 font-medium">Products</a>
+                <a href="#about" className="text-gray-700 hover:text-gray-900 font-medium">About</a>
+                <a href="#contact" className="text-gray-700 hover:text-gray-900 font-medium">Contact</a>
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <button className="p-2 hover:bg-gray-100 rounded-full">
-                <Heart className="h-5 w-5" />
+              <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                <Heart className="h-5 w-5 text-gray-700" />
               </button>
-              <button className="p-2 hover:bg-gray-100 rounded-full relative">
-                <ShoppingCart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+              <button className="p-2 hover:bg-gray-100 rounded-full relative transition-colors">
+                <ShoppingCart className="h-5 w-5 text-gray-700" />
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
                   0
                 </span>
               </button>
@@ -88,8 +89,7 @@ function PreviewContent() {
       </nav>
 
       <section 
-        className="py-20 text-center"
-        style={{ backgroundColor: store.colorScheme.secondary }}
+        className="py-24 text-center bg-white"
       >
         <div className="max-w-4xl mx-auto px-4">
           <h1 
@@ -98,11 +98,11 @@ function PreviewContent() {
           >
             {store.tagline}
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-700 mb-8 max-w-2xl mx-auto leading-relaxed">
             {store.description}
           </p>
           <button 
-            className="px-8 py-4 rounded-full text-white font-semibold hover:shadow-lg transition-all"
+            className="px-10 py-4 rounded-full text-white font-semibold hover:shadow-xl transition-all transform hover:scale-105"
             style={{ backgroundColor: store.colorScheme.primary }}
           >
             Shop Now
@@ -110,31 +110,50 @@ function PreviewContent() {
         </div>
       </section>
 
-      <section id="products" className="py-16 max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12">Our Products</h2>
+      <section id="products" className="py-20 max-w-7xl mx-auto px-4">
+        <h2 className="text-4xl font-bold text-center mb-16 text-gray-900">Our Products</h2>
         <div className="grid md:grid-cols-3 gap-8">
           {store.products?.map((product) => (
-            <div key={product.id} className="group">
-              <div className="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gradient-to-br from-gray-100 to-gray-200 group-hover:scale-105 transition-transform">
-                  <span className="text-6xl">{product.category === 'fashion' ? '👔' : product.category === 'tech' ? '💻' : '📦'}</span>
-                </div>
+            <div key={product.id} className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all">
+              <div className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-t-2xl overflow-hidden relative">
+                {product.image ? (
+                  <Image 
+                    src={product.image} 
+                    alt={product.name}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-8xl group-hover:scale-110 transition-transform">
+                    {product.category === 'fashion' || product.category === 'Fashion & Apparel' ? '👔' : 
+                     product.category === 'tech' || product.category === 'Tech & Gadgets' ? '💻' : 
+                     product.category === 'food' ? '🍕' : '📦'}
+                  </div>
+                )}
               </div>
-              <h3 className="font-semibold mb-2">{product.name}</h3>
-              <p className="text-sm text-gray-600 mb-2">{product.description}</p>
-              <div className="flex items-center justify-between">
-                <span 
-                  className="text-xl font-bold"
-                  style={{ color: store.colorScheme.accent }}
-                >
-                  ${product.price}
-                </span>
-                <button 
-                  className="px-4 py-2 rounded-full text-sm font-semibold text-white hover:shadow-lg transition-all"
-                  style={{ backgroundColor: store.colorScheme.primary }}
-                >
-                  Add to Cart
-                </button>
+              <div className="p-6">
+                <h3 className="font-bold text-xl mb-2 text-gray-900">{product.name}</h3>
+                <p className="text-sm text-gray-600 mb-4 line-clamp-2">{product.description}</p>
+                <div className="flex items-center mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                  <span className="ml-2 text-sm text-gray-600">(12)</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span 
+                    className="text-2xl font-bold"
+                    style={{ color: store.colorScheme.accent }}
+                  >
+                    ${product.price}
+                  </span>
+                  <button 
+                    className="px-6 py-3 rounded-full text-sm font-semibold text-white hover:shadow-lg transition-all transform hover:scale-105"
+                    style={{ backgroundColor: store.colorScheme.primary }}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -142,21 +161,21 @@ function PreviewContent() {
       </section>
 
       <footer 
-        className="py-12 mt-20"
-        style={{ backgroundColor: store.colorScheme.primary, color: 'white' }}
+        className="py-16 mt-24 text-white"
+        style={{ backgroundColor: store.colorScheme.primary }}
       >
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <p className="text-xl font-bold mb-2">{store.brandName}</p>
-          <p className="opacity-80">© 2024 All rights reserved</p>
+          <p className="text-2xl font-bold mb-2">{store.brandName}</p>
+          <p className="opacity-90">© 2024 All rights reserved. Powered by StoreForge AI</p>
         </div>
       </footer>
     </div>
   );
 
   const renderBoldVibrant = () => (
-    <div className="min-h-screen" style={{ backgroundColor: store.colorScheme.background }}>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50">
       <nav 
-        className="py-4"
+        className="py-4 shadow-lg"
         style={{ backgroundColor: store.colorScheme.primary }}
       >
         <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
@@ -166,16 +185,16 @@ function PreviewContent() {
           <div className="flex gap-6 text-white font-bold">
             <a href="#products" className="hover:underline">PRODUCTS</a>
             <a href="#about" className="hover:underline">ABOUT</a>
-            <button className="bg-white text-black px-6 py-2 rounded-full font-black transform hover:scale-105 transition-transform">
+            <button className="bg-white px-6 py-2 rounded-full font-black transform hover:scale-110 transition-transform shadow-lg" style={{ color: store.colorScheme.primary }}>
               SHOP
             </button>
           </div>
         </div>
       </nav>
 
-      <section className="py-24 text-center relative overflow-hidden">
+      <section className="py-28 text-center relative overflow-hidden">
         <div 
-          className="absolute inset-0 opacity-10"
+          className="absolute inset-0 opacity-5"
           style={{ 
             backgroundImage: `repeating-linear-gradient(45deg, ${store.colorScheme.accent} 0px, ${store.colorScheme.accent} 10px, transparent 10px, transparent 20px)`
           }}
@@ -187,11 +206,11 @@ function PreviewContent() {
           >
             {store.tagline.toUpperCase()}
           </h1>
-          <p className="text-2xl font-bold mb-8" style={{ color: store.colorScheme.text }}>
+          <p className="text-2xl font-bold mb-10 text-gray-800">
             {store.description}
           </p>
           <button 
-            className="px-12 py-6 rounded-full text-white text-xl font-black transform hover:scale-110 transition-all shadow-2xl"
+            className="px-14 py-6 rounded-full text-white text-xl font-black transform hover:scale-110 transition-all shadow-2xl"
             style={{ backgroundColor: store.colorScheme.accent }}
           >
             EXPLORE NOW
@@ -199,9 +218,9 @@ function PreviewContent() {
         </div>
       </section>
 
-      <section id="products" className="py-16 max-w-7xl mx-auto px-4">
+      <section id="products" className="py-20 max-w-7xl mx-auto px-4">
         <h2 
-          className="text-5xl font-black text-center mb-12 transform -skew-x-6"
+          className="text-5xl font-black text-center mb-16 transform -skew-x-6"
           style={{ color: store.colorScheme.primary }}
         >
           FEATURED PRODUCTS
@@ -210,26 +229,36 @@ function PreviewContent() {
           {store.products?.map((product) => (
             <div 
               key={product.id} 
-              className="rounded-2xl p-6 transform hover:scale-105 transition-all shadow-lg"
-              style={{ backgroundColor: 'white' }}
+              className="rounded-2xl p-6 transform hover:scale-105 transition-all shadow-2xl bg-white"
             >
               <div 
-                className="aspect-square rounded-xl mb-4 flex items-center justify-center text-7xl"
+                className="aspect-square rounded-xl mb-6 flex items-center justify-center text-8xl overflow-hidden relative"
                 style={{ backgroundColor: store.colorScheme.secondary }}
               >
-                {product.category === 'fashion' ? '👔' : product.category === 'tech' ? '💻' : '📦'}
+                {product.image ? (
+                  <Image 
+                    src={product.image} 
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <>{product.category === 'fashion' || product.category === 'Fashion & Apparel' ? '👔' : 
+                    product.category === 'tech' || product.category === 'Tech & Gadgets' ? '💻' : 
+                    product.category === 'food' ? '🍕' : '📦'}</>
+                )}
               </div>
-              <h3 className="font-black text-xl mb-2">{product.name.toUpperCase()}</h3>
-              <p className="text-sm mb-4">{product.description}</p>
+              <h3 className="font-black text-xl mb-3 text-gray-900">{product.name.toUpperCase()}</h3>
+              <p className="text-sm mb-6 text-gray-700">{product.description}</p>
               <div className="flex items-center justify-between">
                 <span 
-                  className="text-3xl font-black"
+                  className="text-4xl font-black"
                   style={{ color: store.colorScheme.accent }}
                 >
                   ${product.price}
                 </span>
                 <button 
-                  className="px-6 py-3 rounded-full font-black text-white shadow-lg hover:shadow-xl transition-all"
+                  className="px-8 py-4 rounded-full font-black text-white shadow-xl hover:shadow-2xl transition-all"
                   style={{ backgroundColor: store.colorScheme.primary }}
                 >
                   BUY NOW
@@ -239,12 +268,19 @@ function PreviewContent() {
           ))}
         </div>
       </section>
+
+      <footer className="py-16 mt-24 bg-gray-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 text-center">
+          <p className="text-3xl font-black mb-2 transform -skew-x-6">{store.brandName}</p>
+          <p className="opacity-80">© 2024 All rights reserved</p>
+        </div>
+      </footer>
     </div>
   );
 
   const renderClassicElegant = () => (
-    <div className="min-h-screen bg-white">
-      <nav className="border-b border-gray-200">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-stone-100">
+      <nav className="border-b border-gray-300 bg-white/90 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex justify-between items-center">
             <div 
@@ -253,76 +289,88 @@ function PreviewContent() {
             >
               {store.brandName}
             </div>
-            <div className="flex gap-8 text-sm tracking-wider uppercase">
-              <a href="#collection" className="text-gray-600 hover:text-gray-900">Collection</a>
-              <a href="#about" className="text-gray-600 hover:text-gray-900">About</a>
-              <a href="#contact" className="text-gray-600 hover:text-gray-900">Contact</a>
+            <div className="flex gap-10 text-sm tracking-widest uppercase font-semibold">
+              <a href="#collection" className="text-gray-700 hover:text-gray-900 transition-colors">Collection</a>
+              <a href="#about" className="text-gray-700 hover:text-gray-900 transition-colors">About</a>
+              <a href="#contact" className="text-gray-700 hover:text-gray-900 transition-colors">Contact</a>
             </div>
           </div>
         </div>
       </nav>
 
-      <section className="py-32 text-center">
+      <section className="py-36 text-center bg-white">
         <div className="max-w-3xl mx-auto px-4">
           <div 
-            className="w-1 h-16 mx-auto mb-8"
+            className="w-1 h-20 mx-auto mb-10"
             style={{ backgroundColor: store.colorScheme.accent }}
           />
           <h1 
-            className="text-5xl font-serif mb-6 tracking-wide"
-            style={{ color: store.colorScheme.primary }}
+            className="text-5xl md:text-6xl font-serif mb-8 tracking-wide text-gray-900"
           >
             {store.tagline}
           </h1>
-          <p className="text-lg text-gray-600 leading-relaxed mb-8 font-serif italic">
+          <p className="text-xl text-gray-700 leading-relaxed mb-12 font-serif italic max-w-2xl mx-auto">
             {store.description}
           </p>
           <button 
-            className="px-10 py-4 border-2 font-serif tracking-wider hover:bg-black hover:text-white transition-all"
-            style={{ borderColor: store.colorScheme.primary, color: store.colorScheme.primary }}
+            className="px-12 py-4 border-2 font-serif tracking-wider hover:bg-gray-900 hover:text-white transition-all text-gray-900"
+            style={{ borderColor: store.colorScheme.primary }}
           >
             Discover Collection
           </button>
         </div>
       </section>
 
-      <section id="collection" className="py-16 max-w-6xl mx-auto px-4">
-        <h2 className="text-4xl font-serif text-center mb-16 tracking-wide">
+      <section id="collection" className="py-20 max-w-6xl mx-auto px-4">
+        <h2 className="text-4xl font-serif text-center mb-20 tracking-wide text-gray-900">
           Featured Collection
         </h2>
         <div className="grid md:grid-cols-2 gap-16">
           {store.products?.map((product) => (
-            <div key={product.id} className="group">
-              <div className="aspect-[3/4] bg-gray-50 mb-6 overflow-hidden">
-                <div className="w-full h-full flex items-center justify-center text-8xl bg-gradient-to-br from-gray-50 to-gray-100 group-hover:scale-110 transition-transform duration-500">
-                  {product.category === 'fashion' ? '👔' : product.category === 'tech' ? '💻' : '📦'}
-                </div>
+            <div key={product.id} className="group bg-white rounded-lg shadow-lg overflow-hidden">
+              <div className="aspect-[3/4] bg-gradient-to-br from-stone-100 to-stone-200 overflow-hidden relative">
+                {product.image ? (
+                  <Image 
+                    src={product.image} 
+                    alt={product.name}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-9xl group-hover:scale-110 transition-transform duration-700">
+                    {product.category === 'fashion' || product.category === 'Fashion & Apparel' ? '👔' : 
+                     product.category === 'tech' || product.category === 'Tech & Gadgets' ? '💻' : 
+                     product.category === 'food' ? '🍕' : '📦'}
+                  </div>
+                )}
               </div>
-              <h3 className="font-serif text-2xl mb-3 tracking-wide">{product.name}</h3>
-              <p className="text-gray-600 mb-4 leading-relaxed">{product.description}</p>
-              <div className="flex items-center justify-between border-t border-gray-200 pt-4">
-                <span 
-                  className="text-2xl font-serif"
-                  style={{ color: store.colorScheme.accent }}
-                >
-                  ${product.price}
-                </span>
-                <button 
-                  className="px-6 py-3 border font-serif tracking-wider hover:bg-black hover:text-white transition-all"
-                  style={{ borderColor: store.colorScheme.primary }}
-                >
-                  Select
-                </button>
+              <div className="p-8">
+                <h3 className="font-serif text-2xl mb-4 tracking-wide text-gray-900">{product.name}</h3>
+                <p className="text-gray-700 mb-6 leading-relaxed">{product.description}</p>
+                <div className="flex items-center justify-between border-t border-gray-200 pt-6">
+                  <span 
+                    className="text-3xl font-serif"
+                    style={{ color: store.colorScheme.accent }}
+                  >
+                    ${product.price}
+                  </span>
+                  <button 
+                    className="px-8 py-3 border-2 font-serif tracking-wider hover:bg-gray-900 hover:text-white hover:border-gray-900 transition-all text-gray-900"
+                    style={{ borderColor: store.colorScheme.primary }}
+                  >
+                    Select
+                  </button>
+                </div>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      <footer className="border-t border-gray-200 py-12 mt-32">
+      <footer className="border-t border-gray-300 py-16 mt-32 bg-white">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <p className="font-serif text-2xl mb-2 tracking-wider">{store.brandName}</p>
-          <p className="text-gray-600 text-sm tracking-wider">ESTABLISHED 2024</p>
+          <p className="font-serif text-2xl mb-3 tracking-widest text-gray-900">{store.brandName}</p>
+          <p className="text-gray-600 text-sm tracking-widest">ESTABLISHED 2024</p>
         </div>
       </footer>
     </div>
@@ -346,7 +394,7 @@ function PreviewContent() {
       <div className="fixed top-4 left-4 z-50">
         <Link
           href="/dashboard"
-          className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all"
+          className="flex items-center gap-2 glass-dark border border-blue-500/30 px-5 py-3 rounded-full shadow-2xl hover:shadow-blue-500/50 transition-all text-white font-semibold"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Dashboard
@@ -361,10 +409,10 @@ function PreviewContent() {
               const parsed = JSON.parse(currentStore);
               parsed.published = true;
               localStorage.setItem('tempStore', JSON.stringify(parsed));
-              alert('Store published successfully! 🎉');
+              alert('Store published successfully! 🎉\n\nYour store is now live at: ' + parsed.subdomain + '.storeforge.ai');
             }
           }}
-          className="bg-gradient-to-r from-green-600 to-blue-600 text-white px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all font-semibold"
+          className="bg-gradient-to-r from-green-600 to-blue-600 text-white px-8 py-3 rounded-full shadow-2xl hover:shadow-green-500/50 transition-all font-bold glow-green"
         >
           Publish Store
         </button>
@@ -378,10 +426,10 @@ function PreviewContent() {
 export default function PreviewPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading preview...</p>
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-300 text-lg">Loading preview...</p>
         </div>
       </div>
     }>

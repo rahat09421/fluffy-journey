@@ -3,10 +3,15 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Sparkles, Plus, Trash2, ShoppingBag, Zap } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles, Plus, Trash2, ShoppingBag, Zap, Upload, X } from 'lucide-react';
 import { generateStoreContent, type ProductInput, type BrandInfo } from '@/lib/ai-generator';
+import Image from 'next/image';
 
 type Step = 1 | 2 | 3 | 4;
+
+interface ProductInputWithImage extends ProductInput {
+  image?: string;
+}
 
 export default function BuilderPage() {
   const router = useRouter();
@@ -14,25 +19,40 @@ export default function BuilderPage() {
   const [brandName, setBrandName] = useState('');
   const [industry, setIndustry] = useState('');
   const [brandDescription, setBrandDescription] = useState('');
-  const [products, setProducts] = useState<ProductInput[]>([
-    { name: '', category: '', price: 0, features: [] }
+  const [products, setProducts] = useState<ProductInputWithImage[]>([
+    { name: '', category: '', price: 0, features: [], image: '' }
   ]);
   const [generatedStore, setGeneratedStore] = useState<ReturnType<typeof generateStoreContent> | null>(null);
   const [selectedTheme, setSelectedTheme] = useState('modern-minimal');
   const [subdomain, setSubdomain] = useState('');
 
   const addProduct = () => {
-    setProducts([...products, { name: '', category: '', price: 0, features: [] }]);
+    setProducts([...products, { name: '', category: '', price: 0, features: [], image: '' }]);
   };
 
   const removeProduct = (index: number) => {
     setProducts(products.filter((_, i) => i !== index));
   };
 
-  const updateProduct = (index: number, field: keyof ProductInput, value: string | number | string[]) => {
+  const updateProduct = (index: number, field: keyof ProductInputWithImage, value: string | number | string[]) => {
     const updated = [...products];
     updated[index] = { ...updated[index], [field]: value };
     setProducts(updated);
+  };
+
+  const handleImageUpload = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        updateProduct(index, 'image', reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    updateProduct(index, 'image', '');
   };
 
   const handleGenerate = () => {
@@ -273,6 +293,44 @@ export default function BuilderPage() {
                             placeholder="99.99"
                           />
                         </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-200 mb-3">
+                          Product Image (Optional)
+                        </label>
+                        {product.image ? (
+                          <div className="relative group">
+                            <div className="aspect-square rounded-xl overflow-hidden border-2 border-blue-500/30 relative">
+                              <Image
+                                src={product.image}
+                                alt={product.name || 'Product'}
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <button
+                              onClick={() => removeImage(index)}
+                              className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-all shadow-lg opacity-0 group-hover:opacity-100"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ) : (
+                          <label className="block">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleImageUpload(index, e)}
+                              className="hidden"
+                            />
+                            <div className="glass-dark border-2 border-dashed border-blue-500/30 rounded-xl p-10 cursor-pointer hover:border-blue-500 transition-all text-center">
+                              <Upload className="h-12 w-12 mx-auto mb-4 text-gray-400" />
+                              <p className="text-gray-300 font-medium mb-1">Click to upload image</p>
+                              <p className="text-sm text-gray-500">PNG, JPG up to 10MB</p>
+                            </div>
+                          </label>
+                        )}
                       </div>
 
                       <p className="text-sm text-gray-400 flex items-center gap-2">
