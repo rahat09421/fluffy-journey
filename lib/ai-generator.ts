@@ -9,6 +9,7 @@ export interface ProductInput {
   category?: string;
   price?: number;
   features?: string[];
+  image?: string;
 }
 
 export interface GeneratedStore {
@@ -200,7 +201,8 @@ export function generateStoreContent(brandInfo: BrandInfo, products: ProductInpu
     
     const longDesc = `Introducing the ${product.name}, a premium ${productCategory} product that combines ${templates[0]} with ${templates[1]}. Designed with attention to detail, this product offers ${templates[2]} and ${templates[3]}. Whether you're looking for ${templates[4]} or ${templates[5]}, the ${product.name} delivers exceptional value. Each unit is crafted to meet the highest standards, ensuring you get the best possible experience. Our commitment to quality means you can trust this product to perform reliably day after day.`;
     
-    const basePrice = product.price || (Math.floor(Math.random() * 200) + 50);
+    // Preserve user's price, only generate if not provided or if it's 0
+    const basePrice = product.price && product.price > 0 ? product.price : (Math.floor(Math.random() * 200) + 50);
     
     const generatedFeatures = product.features && product.features.length > 0 
       ? product.features 
@@ -227,7 +229,7 @@ export function generateStoreContent(brandInfo: BrandInfo, products: ProductInpu
       price: basePrice,
       category: productCategory,
       features: generatedFeatures,
-      image: `/api/placeholder/${400 + index}/${400 + index}`,
+      image: product.image || `/api/placeholder/${400 + index}/${400 + index}`,
       tags
     };
   });
