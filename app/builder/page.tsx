@@ -95,22 +95,103 @@ export default function BuilderPage() {
       return;
     }
 
+    // Clean and prepare the store data
     const storeData = {
-      ...generatedStore,
+      brandName: generatedStore.brandName,
+      tagline: generatedStore.tagline,
+      description: generatedStore.description,
+      colorScheme: generatedStore.colorScheme,
+      products: generatedStore.products,
       subdomain,
       themeId: selectedTheme,
       published: false
     };
     
-    console.log('Saving store data:', storeData);
+    console.log('Preparing to save store data:', storeData);
     
     try {
-      localStorage.setItem('tempStore', JSON.stringify(storeData));
-      console.log('Store data saved successfully');
-      router.push(`/preview?store=${subdomain}`);
+      // Test JSON.stringify first
+      const jsonString = JSON.stringify(storeData);
+      const sizeInMB = new Blob([jsonString]).size / 1024 / 1024;
+      console.log('JSON string length:', jsonString.length);
+      console.log('Size in MB:', sizeInMB.toFixed(2));
+      
+      // Warn if size is large
+      if (sizeInMB > 5) {
+        console.warn('Warning: Data size exceeds 5MB. This might cause issues with localStorage.');
+        if (!confirm(`Your store data is quite large (${sizeInMB.toFixed(2)}MB) due to uploaded images. This might cause saving issues. Continue anyway?`)) {
+          return;
+        }
+      }
+      
+      // Check if localStorage is available
+      if (typeof window !== 'undefined' && window.localStorage) {
+        // Clear old data first to make space
+        localStorage.removeItem('tempStore');
+        
+        // Try to save
+        localStorage.setItem('tempStore', jsonString);
+        console.log('Store data saved successfully to localStorage');
+        
+        // Verify it was saved
+        const savedData = localStorage.getItem('tempStore');
+        if (savedData) {
+          console.log('Verified: Data successfully retrieved from localStorage');
+          router.push(`/preview?store=${subdomain}`);
+        } else {
+          throw new Error('Data was not saved to localStorage');
+        }
+      } else {
+        throw new Error('localStorage is not available');
+      }
     } catch (error) {
       console.error('Error saving store:', error);
-      alert('Failed to save store data. Please try again.');
+      
+      // Check if it's a quota exceeded error
+      const isQuotaError = error instanceof Error && 
+        (error.name === 'QuotaExceededError' || 
+         error.message.includes('quota') ||
+         error.message.includes('storage'));
+      
+      if (isQuotaError) {
+        console.error('localStorage quota exceeded');
+        alert(`Storage quota exceeded! Your uploaded images are too large for browser storage (limit ~5-10MB).
+
+Solutions:
+1. Use smaller images (compress before uploading)
+2. Use fewer product images
+3. We'll use placeholder images for now
+
+Proceeding without images...`);
+        
+        // Try again without images
+        try {
+          const storeDataNoImages = {
+            ...storeData,
+            products: storeData.products.map((p) => ({
+              ...p,
+              image: '' // Use empty string instead of undefined
+            }))
+          };
+          localStorage.removeItem('tempStore');
+          localStorage.setItem('tempStore', JSON.stringify(storeDataNoImages));
+          console.log('Saved successfully without images');
+          router.push(`/preview?store=${subdomain}`);
+          return;
+        } catch (retryError) {
+          console.error('Failed even without images:', retryError);
+        }
+      }
+      
+      console.error('Error details:', {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        storeDataKeys: Object.keys(storeData),
+        productsCount: storeData.products?.length
+      });
+      
+      alert(`Failed to save store data: ${error instanceof Error ? error.message : 'Unknown error'}
+
+Check browser console for details.`);
     }
   };
 
